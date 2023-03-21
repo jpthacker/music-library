@@ -6,7 +6,7 @@ def reset_albums_table
     connection.exec(seed_sql)
 end
 
-RSpec.describe ArtistsRepository do
+RSpec.describe AlbumRepository do
     before(:each) { reset_albums_table }
 
     it "creates a repo of albums" do

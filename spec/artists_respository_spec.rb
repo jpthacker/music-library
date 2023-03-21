@@ -12,7 +12,11 @@ RSpec.describe ArtistsRepository do
     it "creates a repo of artists" do
         artists_repo = ArtistsRepository.new
         artists = artists_repo.all
-        expect(artists[0]["id"]).to eq "1"
-        expect(artists[1]["id"]).to eq "2"
+        expect(artists[0].id).to eq "1"
+        expect(artists[0].name).to eq 'Pixies'
+        expect(artists[0].genre).to eq 'rock'
+        expect(artists[1].id).to eq "2"
+        expect(artists[1].name).to eq 'Abba'
+        expect(artists[1].genre).to eq 'pop'
     end
 end

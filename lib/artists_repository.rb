@@ -1,10 +1,18 @@
-require_relative "database_connection"
+require_relative "artist"
 
 class ArtistsRepository
     def all
-        DatabaseConnection.connect('music_library_test')
+        artists = []
         sql = 'SELECT id, name, genre FROM artists;'
-        @result = DatabaseConnection.exec_params(sql, [])
-        @result
+        results = DatabaseConnection.exec_params(sql, [])
+
+        results.each do |result|
+            artist = Artist.new
+            artist.id = result['id']
+            artist.name = result['name']
+            artist.genre = result['genre']
+            artists << artist
+        end
+        artists
     end
 end
