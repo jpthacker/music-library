@@ -87,14 +87,23 @@ class AlbumRepository
 
   # Add more methods below for each operation you'd like to implement.
 
-  # def create(album)
-  # end
+  def create(album)
+    # Executes the SQL query:
+    # INSERT INTO albums (title, release_year, artist_id) VALUES ($1, $2, $3);
+    # returns nil
+  end
 
-  # def update(album)
-  # end
+  def update(album)
+    # Executes the SQL query:
+    # UPDATE albums SET title = $1, release_year = $2, artist_id = $3;
+    # returns nil
+  end
 
-  # def delete(album)
-  # end
+  def delete(album)
+    # Executes the SQL query:
+    # DELETE FROM albums WHERE id = $1;
+    # returns nil
+  end
 end
 
 # Model class
@@ -273,6 +282,24 @@ artist.name # =>  'Abba'
 artist.genre # =>  'pop'
 
 # Add more examples for each method
+
+# create method
+album_repo = AlbumsRepository.new
+album = Album.new
+album.title = "Arrival"
+album.release_year = "1976"
+album.artist_id = "2"
+
+album_repo.create(album)
+
+albums = album_repo.all
+
+albums.last.title # => "Arrival"
+albums.last.artist_id # => 2
+
+# update method
+
+
 ```
 
 Encode this example as a test.
