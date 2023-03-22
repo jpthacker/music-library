@@ -229,7 +229,7 @@ These examples will later be encoded as RSpec tests.
 ```ruby
 # EXAMPLES
 
-# 1
+# 1 Album repository
 # Get all students
 
 album_repo = AlbumRepository.new
@@ -248,7 +248,6 @@ albums[1].title # =>  'Waterloo'
 albums[1].release_year # =>  1972
 albums[1].artist_id # => 2
 
-# 2
 # Get a single album
 
 album_repo = AlbumsRepository.new
@@ -260,6 +259,8 @@ album.name # =>  'Surfer Rosa'
 album.release_year # =>  1988
 album.artist_id # => 1
 
+# 2. Artist respository
+# Return all artists
 
 artists_repo = ArtistsRespository.new
 
@@ -269,15 +270,23 @@ artists[0].id # =>  1
 artists[0].name # =>  'Pixies'
 artists[0].genre # =>  'rock'
 
-artists[0].id # =>  1
-artists[0].name # =>  'Abba'
-artists[0].genre # =>  'pop'
+artists[1].id # =>  1
+artists[1].name # =>  'Abba'
+artists[1].genre # =>  'pop'
+
+# Return a specfic artist
 
 artists_repo = ArtistsRespository.new
 
-artist = artists_repo.find(2)
+artist = artists_repo.find(1)
 
 artist.id # =>  1
+artist.name # =>  'Pixies'
+artist.genre # =>  'rock'
+
+artist = artists_repo.find(2)
+
+artist.id # =>  2
 artist.name # =>  'Abba'
 artist.genre # =>  'pop'
 

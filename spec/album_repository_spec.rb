@@ -1,4 +1,5 @@
 require "album_repository"
+require "album"
 
 def reset_albums_table
     seed_sql = File.read("spec/seeds_albums.sql")
@@ -26,16 +27,16 @@ RSpec.describe AlbumRepository do
     it "returns a specific album" do
         album_repo = AlbumRepository.new
 
-        album = album_repo.find('1')
+        album = album_repo.find(1)
 
         expect(album.id).to eq '1'
         expect(album.title).to eq 'Surfer Rosa'
         expect(album.release_year).to eq '1988'
         expect(album.artist_id).to eq '1'
 
-        album = album_repo.find('2')
+        album = album_repo.find(2)
 
-        expect(album.id).to eq '1'
+        expect(album.id).to eq '2'
         expect(album.title).to eq 'Waterloo'
         expect(album.release_year).to eq '1972'
         expect(album.artist_id).to eq '2'

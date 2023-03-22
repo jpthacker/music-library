@@ -1,4 +1,4 @@
-require_relative "album"
+require_relative "album_repository"
 
 class AlbumRepository
     def all
@@ -17,16 +17,15 @@ class AlbumRepository
     end
 
     def find(id)
-        # Executes the SQL query:
         sql = "SELECT id, title, release_year, artist_id FROM albums WHERE id = $1;"
         params = [id]
         result = DatabaseConnection.exec_params(sql, params)
         record = result[0]
         album = Album.new
-        album.id = result['id']
-        album.title = result['title']
-        album.release_year = result['release_year']
-        album.artist_id = result['artist_id']
+        album.id = record['id']
+        album.title = record['title']
+        album.release_year = record['release_year']
+        album.artist_id = record['artist_id']
         album
     end
 
