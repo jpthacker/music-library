@@ -22,10 +22,10 @@ class Application
         @io.puts "Enter your choice: "
         input = @io.gets.chomp
         if input == "1"
-            @io.puts 'Here is a list of albums:'
+            @io.puts "Here is a list of albums:"
             @io.puts albums
-        elsif input == '2'
-            @io.puts 'Here is a list of artists:'
+        elsif input == "2"
+            @io.puts "Here is a list of artists:"
             @io.puts artists
         end
     end
@@ -33,21 +33,19 @@ class Application
     private
 
     def albums
-      albums_list = ""
-      albums = @album_repository.all
-      albums.each do |album|
-          albums_list << "* #{album.id} - #{album.title}\n"
-      end
-      return albums_list
+        albums_list = ""
+        albums = @album_repository.all
+        albums.each_with_index { |album, i| albums_list << "* #{i + 1} - #{album.title}\n" }
+        return albums_list
     end
 
     def artists
-      artists_list = ""
-      artists = @artist_repository.all
-      artists.each do |artist|
-          artists_list << "* #{artist.id} - #{artist.name}\n"
-      end
-      return artists_list
+        artists_list = ""
+        artists = @artist_repository.all
+        artists.each_with_index do |artist, i|
+            artists_list << "* #{i + 1} - #{artist.name}\n"
+        end
+        return artists_list
     end
 end
 
