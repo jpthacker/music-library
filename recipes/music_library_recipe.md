@@ -55,8 +55,52 @@ psql -h 127.0.0.1 your_database_name < seeds_{table_name}.sql
 Usually, the Model class name will be the capitalised table name (single instead of plural). The same name is then suffixed by `Repository` for the Repository class name.
 
 ```ruby
-# EXAMPLE
-# Table name: students
+# file: app.rb
+
+require_relative './lib/album_repository'
+require_relative './lib/artist_repository'
+
+class Application
+
+  # The Application class initializer
+  # takes four arguments:
+  #  * The database name to call `DatabaseConnection.connect`
+  #  * the Kernel object as `io` (so we can mock the IO in our tests)
+  #  * the AlbumRepository object (or a double of it)
+  #  * the ArtistRepository object (or a double of it)
+  def initialize(database_name, io, album_repository, artist_repository)
+    DatabaseConnection.connect(database_name)
+    @io = io
+    @album_repository = album_repository
+    @artist_repository = artist_repository
+  end
+
+  def run
+    # "Runs" the terminal application
+    # so it can ask the user to enter some input
+    # and then decide to run the appropriate action
+    # or behaviour.
+
+    # Use `@io.puts` or `@io.gets` to
+    # write output and ask for user input.
+  end
+end
+
+# Don't worry too much about this if statement. It is basically saying "only
+# run the following code if this is the main file being run, instead of having
+# been required or loaded by another file.
+# If you want to learn more about __FILE__ and $0, see here: https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Variables_and_Constants#Pre-defined_Variables
+if __FILE__ == $0
+  app = Application.new(
+    'music_library',
+    Kernel,
+    AlbumRepository.new,
+    ArtistRepository.new
+  )
+  app.run
+end
+
+# Table name: albums
 
 # Model class
 # (in lib/album.rb)
@@ -119,118 +163,53 @@ class ArtistsRepository
   # No arguments
   def all
     # Executes the SQL query:
-    # SELECT id, name, cohort_name FROM students;
+    # SELECT id, name, genre FROM artists;
 
-    # Returns an array of Student objects.
+    # Returns an array of Artist objects.
   end
 
   # Gets a single record by its ID
   # One argument: the id (number)
   def find(id)
     # Executes the SQL query:
-    # SELECT id, name, cohort_name FROM students WHERE id = $1;
+    # SELECT id, name, genre FROM artists WHERE id = $1;
 
-    # Returns a single Student object.
+    # Returns a single Artist object.
   end
-
-  # Add more methods below for each operation you'd like to implement.
-
-  # def create(student)
-  # end
-
-  # def update(student)
-  # end
-
-  # def delete(student)
-  # end
 end
 ```
 
-## 4. Implement the Model class
-
-Define the attributes of your Model class. You can usually map the table columns to the attributes of the class, including primary and foreign keys.
-
+## 4. Test Examples
 ```ruby
-# EXAMPLE
-# Table name: students
+# 1 Application class
+$ ruby app.rb
 
-# Model class
-# (in lib/student.rb)
+# Welcome to the music library manager!
 
-class Student
+# What would you like to do?
+#  1 - List all albums
+#  2 - List all artists
 
-  # Replace the attributes by your own columns.
-  attr_accessor :id, :name, :cohort_name
-end
+# Enter your choice: 1
+# [ENTER]
 
-# The keyword attr_accessor is a special Ruby feature
-# which allows us to set and get attributes on an object,
-# here's an example:
-#
-# student = Student.new
-# student.name = 'Jo'
-# student.name
-```
+# Here is the list of albums:
+#  * 1 - Doolittle
+#  * 2 - Surfer Rosa
+#  * 3 - Waterloo
+#  * 4 - Super Trouper
+#  * 5 - Bossanova
+#  * 6 - Lover
+#  * 7 - Folklore
+#  * 8 - I Put a Spell on You
+#  * 9 - Baltimore
+#  * 10 -	Here Comes the Sun
+#  * 11 - Fodder on My Wings
+#  * 12 -	Ring Ring
 
-*You may choose to test-drive this class, but unless it contains any more logic than the example above, it is probably not needed.*
+# 2 Album repository
 
-## 5. Define the Repository Class interface
-
-Your Repository class will need to implement methods for each "read" or "write" operation you'd like to run against the database.
-
-Using comments, define the method signatures (arguments and return value) and what they do - write up the SQL queries that will be used by each method.
-
-```ruby
-# EXAMPLE
-# Table name: students
-
-# Repository class
-# (in lib/student_repository.rb)
-
-class StudentRepository
-
-  # Selecting all records
-  # No arguments
-  def all
-    # Executes the SQL query:
-    # SELECT id, name, cohort_name FROM students;
-
-    # Returns an array of Student objects.
-  end
-
-  # Gets a single record by its ID
-  # One argument: the id (number)
-  def find(id)
-    # Executes the SQL query:
-    # SELECT id, name, cohort_name FROM students WHERE id = $1;
-
-    # Returns a single Student object.
-  end
-
-  # Add more methods below for each operation you'd like to implement.
-
-  # def create(student)
-  # end
-
-  # def update(student)
-  # end
-
-  # def delete(student)
-  # end
-end
-```
-
-## 6. Write Test Examples
-
-Write Ruby code that defines the expected behaviour of the Repository class, following your design from the table written in step 5.
-
-These examples will later be encoded as RSpec tests.
-
-```ruby
-# EXAMPLES
-
-# 1 Album repository
-# Get all students
+# Get all albums
 
 album_repo = AlbumRepository.new
 
@@ -259,7 +238,23 @@ album.name # =>  'Surfer Rosa'
 album.release_year # =>  1988
 album.artist_id # => 1
 
-# 2. Artist respository
+# create a new album
+
+album_repo = AlbumsRepository.new
+album = Album.new
+album.title = "Arrival"
+album.release_year = "1976"
+album.artist_id = "2"
+
+album_repo.create(album)
+
+albums = album_repo.all
+
+albums.last.title # => "Arrival"
+albums.last.artist_id # => 2
+
+# 3. Artist respository
+
 # Return all artists
 
 artists_repo = ArtistsRespository.new
@@ -289,25 +284,6 @@ artist = artists_repo.find(2)
 artist.id # =>  2
 artist.name # =>  'Abba'
 artist.genre # =>  'pop'
-
-# Add more examples for each method
-
-# create method
-album_repo = AlbumsRepository.new
-album = Album.new
-album.title = "Arrival"
-album.release_year = "1976"
-album.artist_id = "2"
-
-album_repo.create(album)
-
-albums = album_repo.all
-
-albums.last.title # => "Arrival"
-albums.last.artist_id # => 2
-
-# update method
-
 
 ```
 
