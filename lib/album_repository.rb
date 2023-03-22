@@ -1,4 +1,4 @@
-require_relative "album_repository"
+require_relative "album"
 
 class AlbumRepository
     def all
